@@ -1,1 +1,35 @@
+/************************************************
+  Taller 4:  Problem Set 1: Review of Regression
 
+  Author:  Abraham Caraballo; Camila Ramos; 
+		   Laura Redondo; Sergio Sánchez. 	
+***************************************************/
+clear all
+
+di "current user: `c(username)'"
+if "`c(username)'" == "Abrah"{
+	global path "C:\Users\Abrah\OneDrive\Primeros Semestres\Abraham Caraballo\Documentos Academicos\Temas Academicos\Universidad del Rosario\Cuarto semestre\Evaluación de impacto\Talleres\Taller 4\Data1"
+}
+global Taller_4 "$path"
+use "$Taller_4/PS4_Nunn(2008)", clear
+
+*A. estimación básica. 
+
+// ln_maddison_pcgdp2000: es el logaritmo natural del PIB percapita
+// ln_export_area: es el logaritmo natural del numero de exclavos entre 1400 y 1900.
+
+reg ln_maddison_pcgdp2000 ln_export_area
+
+*B. Efectos fijos de los colonizadores
+// Colony 1
+reg ln_maddison_pcgdp2000 ln_export_area colony1 colony2 colony3 colony4 colony5 colony6 colony7
+
+*D. Correr la primera etapa IV con la variable saharan_distance_minimun
+//utilizando ivreg2
+ivreg2 ln_maddison_pcgdp2000 ( ln_export_area= saharan_distance_minimum ), first
+
+*E. Ahora con cuatro instrumentos:
+**Ahora, ejemplo con codigo de la clase. 
+ivregress 2sls ln_maddison_pcgdp2000 (ln_export_area= saharan_distance_minimum atlantic_distance_minimum indian_distance_minimum red_sea_distance_minimum )
+*Opción 1, para revisar los test con 
+ivreg2 ln_maddison_pcgdp2000 ( ln_export_area= saharan_distance_minimum atlantic_distance_minimum indian_distance_minimum red_sea_distance_minimum)
