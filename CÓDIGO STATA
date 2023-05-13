@@ -61,4 +61,26 @@ pstest2 e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indru
 
 pbalchk treatment e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indrural gini pobreza nbi pib_percapitaL H_coca, wt(_weight) graph
 
-*E. 
+*E. Abadie & Imbends
+
+nnmatch IngresosTpcL treatment e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indrural gini pobreza nbi pib_percapitaL H_coca, m(2) tc(att) bias(bias) robust(2)
+
+* Revisamos robustez
+nnmatch IngresosTpcL treatment e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indrural gini pobreza nbi pib_percapitaL H_coca, m(1) tc(att) bias(bias) /*M=1*/
+nnmatch  IngresosTpcL treatment e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indrural gini pobreza nbi pib_percapitaL H_coca, m(3) tc(att) bias(bias) /*M=3*/
+nnmatch  IngresosTpcL treatment e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indrural gini pobreza nbi pib_percapitaL H_coca, m(4) tc(att) bias(bias) /*M=4*/
+
+*F. Propensity Score
+
+logistic treatment e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indrural gini pobreza nbi pib_percapitaL H_coca
+predict pscore
+
+* 2 neighbors
+psmatch2 treatment, pscore(pscore) outcome(IngresosTpcL) neigh(2)
+
+* 3 neighbors
+psmatch2 treatment, pscore(pscore) outcome(IngresosTpcL) neigh(3)
+
+* Testeamos la forma funcional
+quiet logistic treatment e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indrural gini pobreza nbi pib_percapitaL H_coca
+estat gof, group(10) table
