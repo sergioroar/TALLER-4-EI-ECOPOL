@@ -13,6 +13,8 @@ if "`c(username)'" == "Abrah"{
 global Taller_4 "$path"
 use "$Taller_4/PS4_Nunn(2008)", clear
 
+*1) Instrumental Variables
+
 *A. estimación básica. 
 
 // ln_maddison_pcgdp2000: es el logaritmo natural del PIB percapita
@@ -33,3 +35,20 @@ ivreg2 ln_maddison_pcgdp2000 ( ln_export_area= saharan_distance_minimum ), first
 ivregress 2sls ln_maddison_pcgdp2000 (ln_export_area= saharan_distance_minimum atlantic_distance_minimum indian_distance_minimum red_sea_distance_minimum )
 *Opción 1, para revisar los test con 
 ivreg2 ln_maddison_pcgdp2000 ( ln_export_area= saharan_distance_minimum atlantic_distance_minimum indian_distance_minimum red_sea_distance_minimum)
+
+
+*2) Score Matching
+
+*A. Estadísticas Descriptivas
+describe
+summarize
+
+stddiff e_desplazaL e_homicL e_secuestL minas_vicL g_funcL gini pobreza nbi pib_percapitaL H_coca, by(treatment)
+
+*B. Primera Especificación
+
+reg IngresosTpcL treatment e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indrural gini pobreza nbi pib_percapitaL H_coca, robust
+
+*C. Nearest Neighboor Matching
+
+psmatch2 treatment, mahal(e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indrural gini pobreza nbi pib_percapitaL H_coca) outcome(IngresosTpcL) neighbor(2) ate
