@@ -76,10 +76,15 @@ logistic treatment e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_
 predict pscore
 
 * 2 neighbors
-psmatch2 treatment, pscore(pscore) outcome(IngresosTpcL) neigh(2)
+eststo N2: psmatch2 treatment, pscore(pscore) outcome(IngresosTpcL) neigh(2)
 
 * 3 neighbors
-psmatch2 treatment, pscore(pscore) outcome(IngresosTpcL) neigh(3)
+eststo N3: psmatch2 treatment, pscore(pscore) outcome(IngresosTpcL) neigh(3)
+
+* Soporte común
+eststo CS: psmatch2 treatment, pscore(pscore) outcome(IngresosTpcL) noreplacement caliper(0.01)
+
+esttab N2 N3 CS
 
 * Testeamos la forma funcional
 quiet logistic treatment e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indrural gini pobreza nbi pib_percapitaL H_coca
