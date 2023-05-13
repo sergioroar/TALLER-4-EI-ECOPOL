@@ -51,4 +51,14 @@ reg IngresosTpcL treatment e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF
 
 *C. Nearest Neighboor Matching
 
-psmatch2 treatment, mahal(e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indrural gini pobreza nbi pib_percapitaL H_coca) outcome(IngresosTpcL) neighbor(2) ate
+psmatch2 treatment, mahal(e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indrural gini pobreza nbi pib_percapitaL H_coca) outcome(IngresosTpcL)neighbor(2) ate
+
+*D. Evaluate Matching Quality
+
+pstest e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indrural gini pobreza nbi pib_percapitaL H_coca, both treated(treatment) mw(_weight) graph	
+
+pstest2 e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indrural gini pobreza nbi pib_percapitaL H_coca, sum graph mw(_weight)
+
+pbalchk treatment e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indrural gini pobreza nbi pib_percapitaL H_coca, wt(_weight) graph
+
+*E. 
