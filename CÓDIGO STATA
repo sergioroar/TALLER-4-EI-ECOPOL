@@ -13,31 +13,60 @@ if "`c(username)'" == "Abrah"{
 global Taller_4 "$path"
 use "$Taller_4/PS4_Nunn(2008)", clear
 
-*1) Instrumental Variables
-
+***********************
+*1. Instrumental variables
+***********************
 *A. estimación básica. 
 
 // ln_maddison_pcgdp2000: es el logaritmo natural del PIB percapita
 // ln_export_area: es el logaritmo natural del numero de exclavos entre 1400 y 1900.
 
 reg ln_maddison_pcgdp2000 ln_export_area
+//exportamos la tabla a la carpeta.
+outreg2 using "$Taller_4/1A.doc", replace sdec(3) label
 
 *B. Efectos fijos de los colonizadores
-// Colony 1
+
 reg ln_maddison_pcgdp2000 ln_export_area colony1 colony2 colony3 colony4 colony5 colony6 colony7
-
+outreg2 using "$Taller_4/1B.doc", replace sdec(3) label
+ 
 *D. Correr la primera etapa IV con la variable saharan_distance_minimun
+
 //utilizando ivreg2
-ivreg2 ln_maddison_pcgdp2000 ( ln_export_area= saharan_distance_minimum ), first
+ivreg2 ln_maddison_pcgdp2000 ( ln_export_area= saharan_distance_minimum), first
 
-*E. Ahora con cuatro instrumentos:
+//por pasos: clase. 
+eststo ols: reg ln_maddison_pcgdp2000 ln_export_area
+
+eststo etapa1: reg ln_export_area saharan_distance_minimum
+predict iv_d , xb
+
+eststo etapa2: reg ln_maddison_pcgdp2000 iv_d
+
+eststo iv: ivreg2 ln_maddison_pcgdp2000 (ln_export_area= saharan_distance_minimum)
+
+esttab ols etapa1 etapa2 iv, se ar2 keep(ln_export_area iv_d saharan_distance_minimum) ///
+		star(* .1 ** .05 *** .01)
+
 **Ahora, ejemplo con codigo de la clase. 
-ivregress 2sls ln_maddison_pcgdp2000 (ln_export_area= saharan_distance_minimum atlantic_distance_minimum indian_distance_minimum red_sea_distance_minimum )
-*Opción 1, para revisar los test con 
-ivreg2 ln_maddison_pcgdp2000 ( ln_export_area= saharan_distance_minimum atlantic_distance_minimum indian_distance_minimum red_sea_distance_minimum)
+*Sin efectos fijos
+ivregress 2sls ln_maddison_pcgdp2000 (ln_export_area= saharan_distance_minimum atlantic_distance_minimum indian_distance_minimum red_sea_distance_minimum ), first vce(robust)
+
+* Con efectos fijos
+*E. Ahora con cuatro instrumentos y efectos fijos:
+glo controls_IV "colony1 colony2 colony3 colony4 colony5 colony6 colony7"
+
+ivregress 2sls ln_maddison_pcgdp2000 (ln_export_area=saharan_distance_minimum atlantic_distance_minimum indian_distance_minimum red_sea_distance_minimum) $controls_IV , first vce(robust)
+
+ivreg2 ln_maddison_pcgdp2000 (ln_export_area=saharan_distance_minimum atlantic_distance_minimum indian_distance_minimum red_sea_distance_minimum) $controls_IV
+
+//exportamos la tabla a la carpeta
+outreg2 using "$Taller_4/controles.doc", replace sdec(3) label
 
 
+*************************
 *2) Score Matching
+*************************
 
 *A. Estadísticas Descriptivas
 describe
