@@ -72,11 +72,14 @@ outreg2 using "$Taller_4/controles.doc", replace sdec(3) label
 describe
 summarize
 
+//Diferencias por tratamiento. 
 stddiff e_desplazaL e_homicL e_secuestL minas_vicL g_funcL gini pobreza nbi pib_percapitaL H_coca, by(treatment)
 
 *B. Primera Especificación
 
 reg IngresosTpcL treatment e_desplazaL e_homicL e_secuestL minas_vicL g_funcL DF_desemp_fiscL indrural gini pobreza nbi pib_percapitaL H_coca, robust
+//exportamos la tabla a la carpeta
+outreg2 using "$Taller_4/2B.doc", replace sdec(3) label
 
 *C. Nearest Neighboor Matching
 
